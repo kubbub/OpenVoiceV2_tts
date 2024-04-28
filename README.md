@@ -3,8 +3,8 @@
   <img src="resources/openvoicelogo.jpg" width="400"/> 
 
 [Paper](https://arxiv.org/abs/2312.01479) |
-[Website](https://research.myshell.ai/open-voice) 
-
+[Website](https://research.myshell.ai/open-voice) | 
+[![Replicate](https://replicate.com/cjwbw/openvoice/badge)](https://replicate.com/cjwbw/openvoice)
 </div>
 
 ## Introduction
