@@ -23,9 +23,13 @@ build:
     - cn2an==0.5.22
     - jieba==0.42.1
     - langid==1.1.6
+    - jaconv==0.3.3
+    - nltk==3.8.1
   run:
+    - apt-get update && apt-get install -y ffmpeg
     - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.6.0/pget_linux_x86_64" && chmod +x /usr/local/bin/pget
-    - pip install git+https://github.com/myshell-ai/MeloTTS.git
+    - pip install jaconv==0.3.3
+    - git clone https://github.com/myshell-ai/MeloTTS.git
+    - pip install ./MeloTTS
     - python -m unidic download
-    - #
 predict: "predict.py:Predictor"
