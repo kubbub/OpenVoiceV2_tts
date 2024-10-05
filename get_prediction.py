@@ -9,52 +9,15 @@ from typing import Dict, Tuple
 import re
 
 
-def fetch_and_save_configs() -> Dict[str, str]:
-    ic("Checking for config files...")
-    config_dir = Path("configs/checkpoints")
-    config_dir.mkdir(parents=True, exist_ok=True)
-
-    config_files = {
-        "base_config": (
-            "myshell-ai/OpenVoice",
-            "checkpoints/base_speakers/EN/config.json",
-        ),
-        "base_checkpoint": (
-            "myshell-ai/OpenVoice",
-            "checkpoints/base_speakers/EN/checkpoint.pth",
-        ),
-        "converter_config": (
-            "myshell-ai/OpenVoice",
-            "checkpoints/converter/config.json",
-        ),
-        "converter_checkpoint": (
-            "myshell-ai/OpenVoice",
-            "checkpoints/converter/checkpoint.pth",
-        ),
-        "en_default_se": (
-            "myshell-ai/OpenVoice",
-            "checkpoints/base_speakers/EN/en_default_se.pth",
-        ),
+def get_config_paths() -> Dict[str, str]:
+    config_dir = Path("configs/checkpoints/checkpoints")
+    return {
+        "base_config": str(config_dir / "base_speakers/EN/config.json"),
+        "base_checkpoint": str(config_dir / "base_speakers/EN/checkpoint.pth"),
+        "converter_config": str(config_dir / "converter/config.json"),
+        "converter_checkpoint": str(config_dir / "converter/checkpoint.pth"),
+        "en_default_se": str(config_dir / "base_speakers/EN/en_default_se.pth"),
     }
-
-    downloaded_files = {}
-    for key, (repo_id, filename) in config_files.items():
-        local_path = config_dir / Path(filename).name
-        if local_path.exists():
-            ic(f"File {key} already exists locally: {local_path}")
-            downloaded_files[key] = str(local_path)
-        else:
-            ic(f"Downloading {key} from Hugging Face Hub...")
-            try:
-                downloaded_files[key] = hf_hub_download(
-                    repo_id=repo_id, filename=filename, local_dir=config_dir
-                )
-                ic(f"Downloaded {key}: {downloaded_files[key]}")
-            except Exception as e:
-                ic(f"Error downloading {key}: {str(e)}")
-                raise
-
-    return downloaded_files
 
 
 def initialize_models(
@@ -81,7 +44,7 @@ def generate_voice(
     output_dir = "outputs"
     os.makedirs(output_dir, exist_ok=True)
 
-    configs = fetch_and_save_configs()
+    configs = get_config_paths()
     base_speaker_tts, tone_color_converter = initialize_models(configs, device)
 
     ic("Loading source speaker embedding...")
@@ -95,7 +58,7 @@ def generate_voice(
 
     all_audio_paths = []
     for i, sentence in enumerate(sentences):
-        ic(f"Generating TTS for sentence {i+1}/{len(sentences)}")
+        ic("Generating TTS for sentence:", i + 1, "/", len(sentences))
         tmp_path = f"{output_dir}/tmp_{i}.wav"
         base_speaker_tts.tts(
             sentence, tmp_path, speaker="default", language="English", speed=1.0
@@ -144,11 +107,8 @@ def combine_audio_files(audio_paths, output_path):
 
 if __name__ == "__main__":
     text_to_speak = """
-    Italy's northern regions are facing an outbreak of African swine fever,
-    which has significant implications for the production of prized prosciutto. 
-    The disease was first detected in late August,
-    and efforts are underway to contain the spread and mitigate the impact on the local pork industry.
+    The integration of AI into various industries has driven significant advancements in hardware technology. PC manufacturers are now offering AI-specific hardware to enhance end-user devices. Field-Programmable Gate Arrays (FPGAs) and Application-Specific Integrated Circuits (ASICs), such as Google's Tensor Processing Units (TPUs), are being utilized to accelerate machine learning workloads. These hardware solutions are particularly useful in edge computing scenarios, where AI capabilities need to be deployed close to the data source to reduce latency and improve decision-making. Microsoft has introduced Copilot+ PCs, which feature new silicon capable of performing over 40 trillion operations per second, enhancing AI capabilities such as real-time image generation and language translation. Apple has also integrated Apple silicon to handle advanced AI processing. These developments reflect the growing trend of AI processing moving closer to the user and the edge, rather than relying solely on cloud-based solutions.
     """
-    output_filename = "italy_swine_fever_report"
+    output_filename = "tech_report"
     generated_file = generate_voice(text_to_speak, output_filename)
-    print(f"Generated audio file: {generated_file}")
+    ic("Generated audio file: ", generated_file)
