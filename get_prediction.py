@@ -10,13 +10,16 @@ from icecream import ic
 
 class OpenVoiceTTS:
     def __init__(
-        self, reference_speaker: str = "resources/demo_speaker2.mp3", speed: float = 1.1
+        self,
+        reference_speaker: str = "resources/Untitled.mp3",
+        speed: float = 1.0,
+        output_dir: str = "outputs_test_v2",
     ):
         self.reference_speaker = reference_speaker
         self.speed = speed
         self.ckpt_converter = "checkpoints_v2/converter"
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
-        self.output_dir = os.path.join(os.getcwd(), "outputs_test_v2")
+        self.output_dir = os.path.join(os.getcwd(), output_dir)
         self._setup_output_directory()
         self._initialize_models()
 
@@ -41,11 +44,12 @@ class OpenVoiceTTS:
         self.speaker_ids = self.model.hps.data.spk2id
         ic("Available speaker IDs:", self.speaker_ids)
 
-    def generate_audio(self, input_text: str) -> Optional[str]:
+    def generate_audio(self, input_text: str, file_name: str) -> Optional[str]:
         src_path = os.path.join(self.output_dir, "tmp.wav")
-        out_path = os.path.join(self.output_dir, "out.wav")
+        out_path = os.path.join(self.output_dir, file_name)
 
         for speaker_key, speaker_id in self.speaker_ids.items():
+            ic(speaker_key)
             speaker_key = speaker_key.lower().replace("_", "-")
             source_se = self._load_source_se(speaker_key)
             if source_se is None:
@@ -96,9 +100,10 @@ class OpenVoiceTTS:
             return False
 
 
-def get_prediction(input_text: str) -> Optional[str]:
-    tts = OpenVoiceTTS()
-    output_path = tts.generate_audio(input_text)
+def get_prediction(input_text: str, output_dir: str, file_name: str) -> Optional[str]:
+    tts = OpenVoiceTTS(output_dir=output_dir)
+    output_path = tts.generate_audio(input_text, file_name)
+
     if output_path:
         print(output_path)
     return output_path
@@ -107,9 +112,14 @@ def get_prediction(input_text: str) -> Optional[str]:
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         text = sys.argv[1]
+        output_dir = sys.argv[2]
+        file_name = sys.argv[3]
     else:
-        text = "Hello, how are you today?"
-    output_path = get_prediction(text)
+        text = "No audio for you bro"
+        output_dir = "speaker_test_fail"
+        file_name = "out.wav"
+
+    output_path = get_prediction(text, output_dir, file_name)
     ic(output_path)
