@@ -11,7 +11,7 @@ import re
 
 def fetch_and_save_configs() -> Dict[str, str]:
     ic("Checking for config files...")
-    config_dir = Path("configs/checkpoints")
+    config_dir = Path("")
     config_dir.mkdir(parents=True, exist_ok=True)
 
     config_files = {

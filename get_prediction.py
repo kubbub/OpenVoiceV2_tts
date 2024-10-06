@@ -10,7 +10,7 @@ import re
 
 
 def get_config_paths() -> Dict[str, str]:
-    config_dir = Path("configs/checkpoints/checkpoints")
+    config_dir = Path("checkpoints")
     return {
         "base_config": str(config_dir / "base_speakers/EN/config.json"),
         "base_checkpoint": str(config_dir / "base_speakers/EN/checkpoint.pth"),
