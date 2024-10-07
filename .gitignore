@@ -14,10 +14,11 @@ build
 
 
 /resources/Untitled.mp3
-/output_test_v2
+output_test_v2
 /model_cache
 /exp_dir
 /.cog
+
 
 /speaker_test_fail
 /speaker_test

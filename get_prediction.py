@@ -13,21 +13,19 @@ class OpenVoiceTTS:
         self,
         reference_speaker: str = "resources/Untitled.mp3",
         speed: float = 1.0,
-        output_dir: str = "outputs_test_v2",
+        output_dir: str = "/Users/bub/Desktop/APPS/ERU_general/eru/backend/notebooks/output",
     ):
         self.reference_speaker = reference_speaker
         self.speed = speed
         self.ckpt_converter = "checkpoints_v2/converter"
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
-        self.output_dir = os.path.join(os.getcwd(), output_dir)
+        self.output_dir = output_dir
         self._setup_output_directory()
         self._initialize_models()
 
     def _setup_output_directory(self) -> None:
         try:
-            if os.path.exists(self.output_dir):
-                shutil.rmtree(self.output_dir)
-            os.makedirs(self.output_dir)
+            os.makedirs(self.output_dir, exist_ok=True)
         except OSError as e:
             ic(f"Error setting up output directory: {e}")
             raise
@@ -118,7 +116,7 @@ if __name__ == "__main__":
         file_name = sys.argv[3]
     else:
         text = "No audio for you bro"
-        output_dir = "speaker_test_fail"
+        output_dir = "/path/to/speaker_test_fail"
         file_name = "out.wav"
 
     output_path = get_prediction(text, output_dir, file_name)
