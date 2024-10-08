@@ -116,7 +116,9 @@ if __name__ == "__main__":
         file_name = sys.argv[3]
     else:
         text = "No audio for you bro"
-        output_dir = "/path/to/speaker_test_fail"
+        output_dir = (
+            "/Users/bub/Desktop/APPS/ERU_general/eru/backend/models/OpenVoiceV2_tts"
+        )
         file_name = "out.wav"
 
     output_path = get_prediction(text, output_dir, file_name)
