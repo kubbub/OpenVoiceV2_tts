@@ -22,6 +22,7 @@ class OpenVoiceTTS:
         self.output_dir = output_dir
         self._setup_output_directory()
         self._initialize_models()
+        ic("OpenVoiceTTS initialized")
 
     def _setup_output_directory(self) -> None:
         try:
@@ -47,7 +48,7 @@ class OpenVoiceTTS:
         out_path = os.path.join(self.output_dir, file_name)
 
         for speaker_key, speaker_id in self.speaker_ids.items():
-            ic(speaker_key)
+            ic("Processing speaker", speaker_key)
             speaker_key = speaker_key.lower().replace("_", "-")
             source_se = self._load_source_se(speaker_key)
             if source_se is None:
@@ -68,7 +69,7 @@ class OpenVoiceTTS:
                 map_location=self.device,
             )
         except FileNotFoundError:
-            ic(f"Speaker embedding file not found for {speaker_key}")
+            ic("Speaker embedding file not found", speaker_key)
             return None
 
     def _generate_tts(self, input_text: str, speaker_id: int, src_path: str) -> bool:
@@ -76,7 +77,7 @@ class OpenVoiceTTS:
             self.model.tts_to_file(input_text, speaker_id, src_path, speed=self.speed)
             return True
         except Exception as e:
-            ic(f"Error generating audio for speaker {speaker_id}: {str(e)}")
+            ic("Error generating audio", str(e))
             return False
 
     def _convert_tone_color(
@@ -91,17 +92,16 @@ class OpenVoiceTTS:
                 output_path=out_path,
                 message=encode_message,
             )
-            ic(f"Successfully converted audio")
+            ic("Audio conversion successful")
             return True
         except Exception as e:
-            ic(f"Error converting audio: {str(e)}")
+            ic("Error converting audio", str(e))
             return False
 
 
 def get_prediction(input_text: str, output_dir: str, file_name: str) -> Optional[str]:
     tts = OpenVoiceTTS(output_dir=output_dir)
     output_path = tts.generate_audio(input_text, file_name)
-
     if output_path:
         print(output_path)
     return output_path
@@ -122,4 +122,4 @@ if __name__ == "__main__":
         file_name = "out.wav"
 
     output_path = get_prediction(text, output_dir, file_name)
-    ic(output_path)
+    ic("Output path", output_path)
