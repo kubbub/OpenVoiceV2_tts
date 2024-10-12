@@ -13,7 +13,7 @@ class OpenVoiceTTS:
         self,
         reference_speaker: str = "resources/Untitled.mp3",
         speed: float = 1.0,
-        output_dir: str = "/Users/bub/Desktop/APPS/ERU_general/eru/backend/notebooks/output",
+        output_dir: str = "/Users/bub/Desktop/APPS/ERU_general/eru/backend/server/audio_management/audio_transcriptions",
     ):
         self.reference_speaker = reference_speaker
         self.speed = speed
