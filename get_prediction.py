@@ -11,7 +11,7 @@ from icecream import ic
 class OpenVoiceTTS:
     def __init__(
         self,
-        reference_speaker: str = "resources/Untitled.mp3",
+        reference_speaker: str = "resources/voice_female1.mp3",
         speed: float = 1.0,
         output_dir: str = "/Users/bub/Desktop/APPS/ERU_general/eru/backend/server/audio_management/audio_transcriptions",
     ):
